@@ -1,13 +1,19 @@
 package dev.jasperwiese.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jasperwiese.context.Application;
+import dev.jasperwiese.context.TransactionApplicationConfiguration;
 import dev.jasperwiese.model.Transaction;
+import dev.jasperwiese.service.TransactionService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.HTTP;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +21,17 @@ import java.util.List;
 
 
 public class BankServlet extends HttpServlet {
+
+    private TransactionService transactionService;
+
+    private ObjectMapper objectMapper;
+
+    public void init() throws ServletException {
+        AnnotationConfigApplicationContext ctx =
+                new AnnotationConfigApplicationContext(TransactionApplicationConfiguration.class);
+        this.transactionService = ctx.getBean(TransactionService.class);
+        this.objectMapper = ctx.getBean(ObjectMapper.class);
+    }
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if(req.getRequestURI().equalsIgnoreCase("/")){
@@ -36,8 +53,8 @@ public class BankServlet extends HttpServlet {
             );
         } else if (req.getRequestURI().equalsIgnoreCase("/transactions")) {
             resp.setContentType("application/json; charset=UTF-8");
-            List<Transaction> transactions = Application.transactionService.findAll();
-            resp.getWriter().print(Application.objectMapper.writeValueAsString(transactions));
+            List<Transaction> transactions = transactionService.findAll();
+            resp.getWriter().print(objectMapper.writeValueAsString(transactions));
         }
     }
 
@@ -56,10 +73,10 @@ public class BankServlet extends HttpServlet {
             String reference = jsonObject.getString("reference");
             System.out.println(amount);
             System.out.println(reference);
-            Transaction transaction = Application.transactionService.create(amount, reference);
+            Transaction transaction = transactionService.create(amount, reference);
             System.out.println(transaction);
             resp.setContentType("application/json; charset=UTF-8");
-            String json = Application.objectMapper.writeValueAsString(transaction);
+            String json = objectMapper.writeValueAsString(transaction);
 
             resp.getWriter().print(json);
         }

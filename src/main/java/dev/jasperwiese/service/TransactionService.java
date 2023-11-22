@@ -1,12 +1,14 @@
 package dev.jasperwiese.service;
 
 import dev.jasperwiese.model.Transaction;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+@Service
 public class TransactionService {
 
     //TODO: Need to implement persistent REPO
