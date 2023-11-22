@@ -10,15 +10,17 @@ public class Transaction {
     private Integer amount;
     private ZonedDateTime timestamp;
     private String reference;
+    private String bankSlogan;
 
     public Transaction() {
     }
 
-    public Transaction(UUID id, Integer amount, ZonedDateTime timestamp, String reference) {
+    public Transaction(UUID id, Integer amount, ZonedDateTime timestamp, String reference, String bankSlogan) {
         this.id = id;
         this.amount = amount;
         this.timestamp = timestamp;
         this.reference = reference;
+        this.bankSlogan = bankSlogan;
     }
 
     public UUID getId() {
@@ -53,6 +55,14 @@ public class Transaction {
         this.reference = reference;
     }
 
+    public String getBankSlogan() {
+        return bankSlogan;
+    }
+
+    public void setBankSlogan(String bankSlogan) {
+        this.bankSlogan = bankSlogan;
+    }
+
     @Override
     public String toString() {
         return "Transaction{" +
@@ -60,6 +70,7 @@ public class Transaction {
                 ", amount=" + amount +
                 ", timestamp=" + timestamp +
                 ", reference='" + reference + '\'' +
+                ", bankSlogan='" + bankSlogan + '\'' +
                 '}';
     }
 }
